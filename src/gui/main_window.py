@@ -135,7 +135,7 @@ class MainWindow:
     def setup_multi_agent_orchestration(self):
         """Sets up the UI for the Agent Orchestrator"""
         self.current_ui = MultiAgentOrchestrationUI(self.dynamic_content_frame)
-        width, height = 1000, 600
+        width, height = 1000, 800
         if self.root.winfo_width() < width and self.root.winfo_height() < height:
             self.root.geometry(f"{width}x{height}")
             logging.info(f"Upscaled window to size: {width}x{height}")

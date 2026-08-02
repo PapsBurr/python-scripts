@@ -1,6 +1,6 @@
 import customtkinter as ctk
 import logging
-from scripts.multi_agent_orchestration_script import AgentOrchestrator
+from scripts.multi_agent_orchestration_script import MultiAgentOrchestrationScript
 from typing import List, Dict
 
 logging.basicConfig(

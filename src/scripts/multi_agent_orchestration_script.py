@@ -1,6 +1,6 @@
 from enum import Enum, auto
 from typing import List, Callable, Optional
-from crewai_tools import SerperRunTool, DirectorySearchTool
+import crewai_tools as CAITools
 from langchain_openai import ChatOpenAI
 import crewai
 import logging
@@ -33,7 +33,7 @@ class MultiAgentOrchestrationScript:
         if enable_tools:
             try:
                 self.tools = [
-                    SerperRunTool(),
+                    CAITools.SerperDevTool(),
                     DirectorySearchTool(base_path=".")
                 ]
                 logging.debug(f"Initialized {len(self.tools)} tools")
@@ -75,12 +75,12 @@ class MultiAgentOrchestrationScript:
     ) -> crewai.Task:
         """Create a CrewAI task with specified parameters."""
         
-        return crew.Task(
+        return crewai.Task(
             description=description,
             expected_output=expected_output,
         )
 
-    def _get_llm(self, model_name: str, temperature: float = 0.3, max_tokens: int = 4096) -> crew.LLM:
+    def _get_llm(self, model_name: str, temperature: float = 0.3, max_tokens: int = 4096) -> crewai.LLM:
         """Get LLM instance from model name string."""
         try:
             # Map model names to CrewAI's supported formats
@@ -169,7 +169,7 @@ class MultiAgentOrchestrationScript:
         )
         
         # Create subsequent tasks based on input
-        created_tasks: List[crew.Task] = []
+        created_tasks: List[crewai.Task] = []
         for i, task_config in enumerate(subsequent_tasks):
             role = task_config.get('role', f'Agent-{i+1}')
             goal = task_config.get('goal', '')

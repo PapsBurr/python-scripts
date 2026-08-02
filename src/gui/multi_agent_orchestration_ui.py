@@ -1,7 +1,7 @@
 import customtkinter as ctk
 import logging
 from scripts.multi_agent_orchestration_script import MultiAgentOrchestrationScript
-from typing import List, Dict
+from typing import List, Dict, Optional
 
 logging.basicConfig(
     level=logging.DEBUG, format="%(asctime)s - %(levelname)s - %(message)s"
@@ -13,7 +13,7 @@ class MultiAgentOrchestrationUI:
 
     def __init__(self, parent_frame):
         self.parent_frame = parent_frame
-        self.orchestrator: Optional[AgentOrchestrator] = None
+        self.orchestrator: Optional[MultiAgentOrchestrationScript] = None
         
         # UI styling
         self.default_font = ctk.CTkFont(family="Helvetica", size=16)
@@ -187,7 +187,7 @@ class MultiAgentOrchestrationUI:
         if not self.orchestrator:
             # Initialize orchestrator with current model and tools settings
             try:
-                self.orchestrator = AgentOrchestrator(
+                self.orchestrator = MultiAgentOrchestrationScript(
                     models=[self.model_selection_var.get()],
                     enable_tools=self.tools_enabled.get(),
                 )

@@ -29,7 +29,7 @@ class MainWindow:
         self.root.iconbitmap(icon_path)
 
         self.current_ui = None
-        self.scripts_list = ["None", "Hold Key", "Weather", "Recipe Finder"]
+        self.scripts_list = ["None", "Hold Key", "Weather", "Recipe Finder", "Multi-Agent Orchestration"]
         logging.info("Main window initializing...")
         self.setup_ui()
 

@@ -5,6 +5,7 @@ import os
 from gui.hold_key_ui import HoldKeyUI
 from gui.weather_ui import WeatherUI
 from gui.recipe_ui import RecipeUI
+from gui.multi_agent_orchestration_ui import MultiAgentOrchestrationUI
 
 
 class MainWindow:
@@ -90,6 +91,8 @@ class MainWindow:
                 self.setup_weather_ui()
             case "Recipe Finder":
                 self.setup_recipe_ui()
+            case "Multi-Agent Orchestration":
+                self.setup_multi_agent_orchestration()
             case _:
                 self.setup_default_ui()
 
@@ -124,6 +127,14 @@ class MainWindow:
     def setup_recipe_ui(self):
         """Sets up the UI for the Recipe Finder script."""
         self.current_ui = RecipeUI(self.dynamic_content_frame)
+        width, height = 1000, 600
+        if self.root.winfo_width() < width and self.root.winfo_height() < height:
+            self.root.geometry(f"{width}x{height}")
+            logging.info(f"Upscaled window to size: {width}x{height}")
+
+    def setup_multi_agent_orchestration(self):
+        """Sets up the UI for the Agent Orchestrator"""
+        self.current_ui = MultiAgentOrchestrationUI(self.dynamic_content_frame)
         width, height = 1000, 600
         if self.root.winfo_width() < width and self.root.winfo_height() < height:
             self.root.geometry(f"{width}x{height}")

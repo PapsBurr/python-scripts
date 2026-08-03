@@ -40,7 +40,6 @@ class MultiAgentOrchestrationScript:
             try:
                 self.tools = [
                     CAITools.SerperDevTool(),
-                    DirectorySearchTool(base_path=".")
                 ]
                 logging.debug(f"Initialized {len(self.tools)} tools")
             except Exception as e:

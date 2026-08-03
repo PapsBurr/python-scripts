@@ -8,7 +8,8 @@ logging.basicConfig(
 class ClampedIntVar(ctk.IntVar):
     def __init__(self, master=None, value=0, min_val=1, max_val=10):
         self.min_val = min_val
-        self.max_val=  max_val
+        self.max_val =  max_val
+        self.value = value
         super().__init__(master, value=value)
         self.trace_add("write", self._clamp_value)
 
@@ -18,5 +19,7 @@ class ClampedIntVar(ctk.IntVar):
             clamped = max(self.min_val, min(val, self.max_val))
             if val != clamped:
                 self.set(clamped)
+                self.value = clamped
         except (ValueError, TypeError):
             self.set(self.min_val)
+            self.value = self.min_val

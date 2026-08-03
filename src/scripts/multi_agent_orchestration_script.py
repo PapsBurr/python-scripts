@@ -127,8 +127,8 @@ class MultiAgentOrchestrationScript:
     def get_models(self) -> List[str]:
         return self.models
 
-    def get_agent_roles(self) -> List[Enum]:
-        return self.agent_roles
+    def get_agent_roles(self) -> List:
+        return [role.value for role in self.agent_roles]
 
     def start(self) -> None:
         """Start the orchestrator (no-op - used for threading pattern)."""

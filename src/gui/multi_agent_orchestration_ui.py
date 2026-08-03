@@ -148,7 +148,7 @@ class MultiAgentOrchestrationUI:
         
         model_label = ctk.CTkLabel(
             config_frame,
-            text="Select AI Model (used for all agents):",
+            text="Select AI Model:",
             font=self.default_font,
         )
         model_label.grid(row=0, column=0, sticky="w", padx=5, pady=2)

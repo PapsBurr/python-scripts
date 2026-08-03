@@ -126,7 +126,7 @@ class MultiAgentOrchestrationScript:
     def get_models(self) -> List[str]:
         return self.models
 
-    def get_agent_roles(self) -> List:
+    def get_agent_roles(self) -> List[str]:
         return [role.value for role in self.agent_roles]
 
     def start(self) -> None:

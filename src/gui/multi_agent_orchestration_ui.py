@@ -301,10 +301,3 @@ class MultiAgentOrchestrationUI:
         # Clear orchestrator reference
         self.orchestrator = None
 
-
-# Example usage (not included in file - just for understanding):
-# root = ctk.CTk()
-# main_frame = ctk.CTkFrame(root, width=600, height=400)
-# ui = CrewAIUI(main_frame)
-# main_frame.pack(expand=True, fill="both")
-# root.mainloop()

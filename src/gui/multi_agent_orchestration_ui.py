@@ -249,7 +249,7 @@ class MultiAgentOrchestrationUI:
         if not self.orchestrator:
             # Initialize orchestrator with current model and tools settings
             try:
-                self.orchestrator = AgentOrchestrator(
+                self.orchestrator = MultiAgentOrchestrationScript(
                     models=[self.model_selection_var.get()],
                     enable_tools=self.tools_enabled.get(),
                 )

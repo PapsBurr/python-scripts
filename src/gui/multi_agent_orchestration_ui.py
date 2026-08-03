@@ -37,7 +37,14 @@ class MultiAgentOrchestrationUI:
             text="AI Agent Orchestration",
             font=self.title_font,
         )
-        self.title_label.pack(pady=10)
+        self.title_label.pack(pady=(10,5))
+
+        self.description_label = ctk.CTkLabel(
+            self.parent_frame,
+            text="Agents will run in order from top to bottom, receiving the previous agents output as input.",
+            font=self.default_font
+        )
+        self.description_label.pack(pady=(5,10))
 
         # Main config frame
         orchestrator_frame = ctk.CTkScrollableFrame(
@@ -266,5 +273,4 @@ class MultiAgentOrchestrationUI:
             wraplength=400,
         )
         self.status_label.grid(row=7, columnspan=2, padx=20, pady=(5,20))
-
 

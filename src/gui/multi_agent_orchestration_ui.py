@@ -13,7 +13,7 @@ class MultiAgentOrchestrationUI:
 
     def __init__(self, parent_frame):
         self.parent_frame = parent_frame
-        self.orchestrator: Optional[MultiAgentOrchestrationScript] = None
+        self.orchestrator: MultiAgentOrchestrationScript = MultiAgentOrchestrationScript()
         
         # UI styling
         self.default_font = ctk.CTkFont(family="Helvetica", size=16)
@@ -24,9 +24,12 @@ class MultiAgentOrchestrationUI:
         )
         
         # Default model list - can be modified by user if needed
-        self.available_models: List[str] = ["gpt-4o", "claude-3-5-sonnet"]
+        self.available_models: List[str] = self.orchestrator.get_models()
 
         self.setup_ui()
+
+    def _create_agent_panel(self):
+        pass
 
     def setup_ui(self):
         """Configure all GUI components for the Agent Orchestrator."""
@@ -43,8 +46,8 @@ class MultiAgentOrchestrationUI:
         config_frame = ctk.CTkFrame(self.parent_frame)
         config_frame.pack(padx=5, pady=5)
 
-        # Model selection - which models to use across agents
-        self.model_selection_var = ctk.StringVar(value="gpt-4o")
+        # Model selection
+        self.model_selection_var = ctk.StringVar(value=self.available_models[0])
         
         model_label = ctk.CTkLabel(
             config_frame,
@@ -60,24 +63,24 @@ class MultiAgentOrchestrationUI:
             values=self.available_models,
             font=self.default_font,
         )
-        self.model_optionmenu.grid(row=0, column=1, padx=5, pady=2)
+        self.model_optionmenu.grid(row=0, column=1, sticky="e", padx=5, pady=2)
 
         # Tools toggle - enable/disable search tools
-        self.tools_enabled = ctk.BooleanVar(value=True)
-        tools_switch_label = ctk.CTkLabel(
-            config_frame,
-            text="Enable Search Tools (Serper + DirectorySearch):",
-            font=self.default_font,
-        )
-        tools_switch_label.grid(row=1, column=0, sticky="w", padx=5, pady=2)
+        # self.tools_enabled = ctk.BooleanVar(value=True)
+        # tools_switch_label = ctk.CTkLabel(
+        #     config_frame,
+        #     text="Enable Search Tools (Serper + DirectorySearch):",
+        #     font=self.default_font,
+        # )
+        # tools_switch_label.grid(row=1, column=0, sticky="w", padx=5, pady=2)
 
-        self.tools_switch = ctk.CTkSwitch(
-            config_frame,
-            text="",  # Label handled by switch itself
-            variable=self.tools_enabled,
-            font=self.default_font,
-        )
-        self.tools_switch.grid(row=1, column=1, padx=5, pady=2)
+        # self.tools_switch = ctk.CTkSwitch(
+        #     config_frame,
+        #     text="",  # Label handled by switch itself
+        #     variable=self.tools_enabled,
+        #     font=self.default_font,
+        # )
+        # self.tools_switch.grid(row=1, column=1, padx=5, pady=2)
 
         # Tool toggle error label (for validation if needed)
         self.tools_error_label = ctk.CTkLabel(
@@ -89,21 +92,21 @@ class MultiAgentOrchestrationUI:
 
         # Initial Research Task section
         initial_task_frame = ctk.CTkFrame(config_frame)
-        initial_task_frame.grid(row=2, columnspan=2, padx=5, pady=2)
+        initial_task_frame.grid(row=2, columnspan=2, sticky="we", padx=5, pady=2)
 
         self.initial_task_label = ctk.CTkLabel(
             initial_task_frame,
-            text="Initial Research Topic:",
+            text="Initial Task:",
             font=self.default_font,
         )
-        self.initial_task_label.grid(row=0, column=0, sticky="w", padx=5)
+        self.initial_task_label.grid(row=0, sticky="w", padx=5)
 
-        self.initial_task_entry = ctk.CTkEntry(
+        self.initial_task_entry = ctk.CTkTextbox(
             initial_task_frame,
-            placeholder_text="e.g., 'Latest AI trends in 2024'",
             font=self.default_font,
+            width=600,
         )
-        self.initial_task_entry.grid(row=0, column=1, padx=5)
+        self.initial_task_entry.grid(row=1, columnspan=2, sticky="nsew", padx=5)
 
         # Add subsequent agents section
         self.add_agent_var = ctk.BooleanVar(value=True)
@@ -120,11 +123,11 @@ class MultiAgentOrchestrationUI:
             variable=self.add_agent_var,
             font=self.default_font,
         )
-        self.add_agent_switch.grid(row=3, column=1, padx=5, pady=2)
+        self.add_agent_switch.grid(row=3, column=1, sticky="e", padx=5, pady=2)
 
         # Agent role configuration (appears if add agent is on)
-        self.agent_role_var = ctk.StringVar(value="Fact Checker")
-        self.agent_goal_var = ctk.StringVar(value="verify research findings")
+        self.agent_role_var = ctk.StringVar(value=self.orchestrator.get_agent_roles().RESEARCHER.value)
+        self.agent_goal_var = ctk.StringVar()
         
         role_frame_visible = False
         
@@ -141,7 +144,7 @@ class MultiAgentOrchestrationUI:
             values=["Fact Checker", "Corrector", "Analyst", "Writer"],
             font=self.default_font,
         )
-        self.agent_role_optionmenu.grid(row=4, column=1, padx=5, pady=2)
+        self.agent_role_optionmenu.grid(row=4, column=1, sticky="e", padx=5, pady=2)
 
         goal_label = ctk.CTkLabel(
             config_frame,
@@ -156,7 +159,7 @@ class MultiAgentOrchestrationUI:
             placeholder_text="e.g., 'identify any factual errors'",
             font=self.default_font,
         )
-        self.agent_goal_entry.grid(row=5, column=1, padx=5, pady=2)
+        self.agent_goal_entry.grid(row=5, column=1, sticky="e", padx=5, pady=2)
 
         # Status label (shows current workflow state)
         self.status_label = ctk.CTkLabel(

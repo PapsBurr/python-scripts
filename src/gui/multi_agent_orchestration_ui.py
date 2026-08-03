@@ -187,23 +187,23 @@ class MultiAgentOrchestrationUI:
             text_color="red",
         )
 
-        # Initial Research Task section
-        agent_task_frame = ctk.CTkFrame(config_frame)
-        agent_task_frame.grid(row=2, columnspan=2, sticky="we", padx=5, pady=2)
+        # # Initial Research Task section
+        # agent_task_frame = ctk.CTkFrame(config_frame)
+        # agent_task_frame.grid(row=2, columnspan=2, sticky="we", padx=5, pady=2)
 
         self.agent_task_label = ctk.CTkLabel(
-            agent_task_frame,
+            config_frame,
             text="Initial Task:",
             font=self.default_font,
         )
-        self.agent_task_label.grid(row=0, sticky="w", padx=5)
+        self.agent_task_label.grid(row=2, sticky="w", padx=5)
 
         self.agent_task_entry = ctk.CTkTextbox(
-            agent_task_frame,
+            config_frame,
             font=self.default_font,
             width=600,
         )
-        self.agent_task_entry.grid(row=1, columnspan=2, sticky="nsew", padx=5)
+        self.agent_task_entry.grid(row=3, columnspan=2, sticky="nsew", padx=5)
 
         # Add subsequent agents section
         # self.add_agent_var = ctk.BooleanVar(value=True)

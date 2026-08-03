@@ -1,7 +1,8 @@
 import customtkinter as ctk
 import logging
 from scripts.multi_agent_orchestration_script import MultiAgentOrchestrationScript
-from typing import List, Dict, Optional
+from typing import List, Dict
+from ctk_bonus_types import ClampedIntVar
 
 logging.basicConfig(
     level=logging.DEBUG, format="%(asctime)s - %(levelname)s - %(message)s"
@@ -46,16 +47,37 @@ class MultiAgentOrchestrationUI:
         )
         self.description_label.pack(pady=(5,10))
 
+        # # Set default number of agents
+        self.num_agents = ClampedIntVar(value=1, min_val=1, max_val=5)
+        num_agents_label = ctk.CTkLabel(
+            self.parent_frame,
+            text="Number of Agents: ",
+            font=self.default_font
+        )
+        num_agents_label.pack(padx=5, pady=5)
+
+        num_agents_steps = self.num_agents.max_val - self.num_agents.min_val
+        num_agents_slider = ctk.CTkSlider(
+            self.parent_frame, 
+            from_=self.num_agents.min_val, 
+            to=self.num_agents.max_val,
+            variable=self.num_agents,
+            number_of_steps=num_agents_steps,
+        )
+        num_agents_slider.pack(padx=5, pady=5)
+
+        num_agents_counter_label = ctk.CTkLabel(
+            self.parent_frame,
+            textvariable=self.num_agents,
+            font=self.default_font
+        )
+        num_agents_counter_label.pack(padx=5, pady=5)
+
         # Main config frame
         orchestrator_frame = ctk.CTkScrollableFrame(
             master=self.parent_frame,
         )
         orchestrator_frame.pack(padx=5, pady=5, expand=True, fill="both")
-
-        # # Set number of agents
-        self.num_agents = ctk.IntVar(value=5)
-
-        # num_agents_label = ctk.CTkLabel()
 
         # Create agent frames
         for _ in range(self.num_agents.get()):

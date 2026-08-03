@@ -106,39 +106,43 @@ class MainWindow:
 
         self.current_ui = None
 
+    def upscale_window(self, width: int | str | None, height: int | str | None):
+        """Upscale window size to provided measurements or to default if not provided"""
+
+        # Handle None
+        if not width:
+            width = self.WINDOW_SIZE.split("x")[0]
+        if not height:
+            height = self.WINDOW_SIZE.split("x")[1]
+        
+        width, height = int(width), int(height)
+        if self.root.winfo_width() < width or self.root.winfo_height() < height:
+            self.root.geometry(f"{width}x{height}")
+            logging.info(f"Upscaled window to size: {width}x{height}")
+
     def setup_hold_key_ui(self):
         """Sets up the UI for the Hold Key script."""
         self.current_ui = HoldKeyUI(self.dynamic_content_frame)
-        width, height = self.WINDOW_SIZE.split("x")
-        if self.root.winfo_width() < int(width) and self.root.winfo_height() < int(
-            height
-        ):
-            self.root.geometry(self.WINDOW_SIZE)
-            logging.info(f"Upscaled window to default size: {self.WINDOW_SIZE}")
+        width, height = 400, 700
+        self.upscale_window(width, height)
 
     def setup_weather_ui(self):
         """Sets up the UI for the Weather script."""
         self.current_ui = WeatherUI(self.dynamic_content_frame)
         width, height = 1000, 600
-        if self.root.winfo_width() < width and self.root.winfo_height() < height:
-            self.root.geometry(f"{width}x{height}")
-            logging.info(f"Upscaled window to size: {width}x{height}")
+        self.upscale_window(width, height)
 
     def setup_recipe_ui(self):
         """Sets up the UI for the Recipe Finder script."""
         self.current_ui = RecipeUI(self.dynamic_content_frame)
         width, height = 1000, 600
-        if self.root.winfo_width() < width and self.root.winfo_height() < height:
-            self.root.geometry(f"{width}x{height}")
-            logging.info(f"Upscaled window to size: {width}x{height}")
+        self.upscale_window(width, height)
 
     def setup_multi_agent_orchestration(self):
         """Sets up the UI for the Agent Orchestrator"""
         self.current_ui = MultiAgentOrchestrationUI(self.dynamic_content_frame)
         width, height = 1000, 800
-        if self.root.winfo_width() < width and self.root.winfo_height() < height:
-            self.root.geometry(f"{width}x{height}")
-            logging.info(f"Upscaled window to size: {width}x{height}")
+        self.upscale_window(width, height)
 
     def setup_default_ui(self):
         """Sets up the default UI when no script is selected."""

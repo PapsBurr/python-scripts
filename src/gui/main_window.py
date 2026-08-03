@@ -141,7 +141,7 @@ class MainWindow:
     def setup_multi_agent_orchestration(self):
         """Sets up the UI for the Agent Orchestrator"""
         self.current_ui = MultiAgentOrchestrationUI(self.dynamic_content_frame)
-        width, height = 1000, 800
+        width, height = 1000, 900
         self.upscale_window(width, height)
 
     def setup_default_ui(self):

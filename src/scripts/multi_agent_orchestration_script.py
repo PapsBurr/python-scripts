@@ -1,4 +1,4 @@
-from enum import Enum, auto
+from enum import Enum
 from typing import List, Callable, Optional
 import crewai_tools as CAITools
 from langchain_openai import ChatOpenAI
@@ -14,21 +14,27 @@ logging.basicConfig(
 
 class AgentRole(Enum):
     """Agent role types"""
-    RESEARCHER = auto()       # Researches and finds information
-    FACT_CHECKER = auto()     # Verifies facts and corrects errors
-    SYNTHESIZER = auto()      # Combines findings into conclusions
-    PLANNER = auto()          # Plans next steps
-    MONITOR = auto()         # Monitors system health
+    RESEARCHER = "Researcher"       # Researches and finds information
+    FACT_CHECKER = "Fact Checker"     # Verifies facts and corrects errors
+    SYNTHESIZER = "Synthesizer"      # Combines findings into conclusions
+    PLANNER = "Planner"          # Plans next steps
+    MONITOR = "Monitor"         # Monitors system health
 
 class MultiAgentOrchestrationScript:
 
-    def __init__(self, models: List[str] = ["qwen3.5-9b-deepseek-v4-flash"], enable_tools: bool = True):
-        self.models = models
+    def __init__(self, enable_tools: bool = True):
         self.enable_tools = enable_tools
         self.agent_threads: dict[str, threading.Thread] = {}
         self.task_status: dict[str, str] = {}
         self.workflow_history: List[dict] = []
         self.tools: Optional[List] = None
+        self.models: List[str] = [
+            "qwen3.5-9b-deepseek-v4-flash",
+            "qwen3.5-4b",
+            "qwen/qwen3.5-9b",
+            "qwen2.5-coder-1.5b-instruct",
+        ]
+        self.agent_roles = AgentRole
 
         if enable_tools:
             try:
@@ -117,6 +123,12 @@ class MultiAgentOrchestrationScript:
             tasks=all_tasks,
             verbose=True,
         )
+
+    def get_models(self) -> List[str]:
+        return self.models
+
+    def get_agent_roles(self) -> List[Enum]:
+        return self.agent_roles
 
     def start(self) -> None:
         """Start the orchestrator (no-op - used for threading pattern)."""

@@ -138,10 +138,12 @@ class MultiAgentOrchestrationUI:
         # Clear orchestrator reference
         self.orchestrator = None
 
-    def _create_agent_panel(self, parent_frame):
+    def _create_agent_panel(self, frame):
         # Agent configuration frame
-        config_frame = ctk.CTkFrame(parent_frame)
-        config_frame.pack(padx=5, pady=(5, 40))
+        outer_frame = ctk.CTkFrame(frame)
+        outer_frame.pack()
+        config_frame = ctk.CTkFrame(outer_frame)
+        config_frame.pack(padx=5, pady=(10, 40))
 
         # Model selection
         self.model_selection_var = ctk.StringVar(value=self.available_models[0])
@@ -151,7 +153,7 @@ class MultiAgentOrchestrationUI:
             text="Select AI Model:",
             font=self.default_font,
         )
-        model_label.grid(row=0, column=0, sticky="w", padx=5, pady=2)
+        model_label.grid(row=0, column=0, sticky="w", padx=20, pady=(20, 5))
 
         # Simple dropdown: just pick one primary model since CrewAI manages multiple internally
         self.model_optionmenu = ctk.CTkOptionMenu(
@@ -160,7 +162,7 @@ class MultiAgentOrchestrationUI:
             values=self.available_models,
             font=self.default_font,
         )
-        self.model_optionmenu.grid(row=0, column=1, sticky="e", padx=5, pady=2)
+        self.model_optionmenu.grid(row=0, column=1, sticky="e", padx=20, pady=(20, 5))
 
         # Tools toggle - enable/disable search tools
         # self.tools_enabled = ctk.BooleanVar(value=True)
@@ -196,14 +198,14 @@ class MultiAgentOrchestrationUI:
             text="Initial Task:",
             font=self.default_font,
         )
-        self.agent_task_label.grid(row=2, sticky="w", padx=5)
+        self.agent_task_label.grid(row=2, sticky="w", padx=20, pady=5)
 
         self.agent_task_entry = ctk.CTkTextbox(
             config_frame,
             font=self.default_font,
             width=600,
         )
-        self.agent_task_entry.grid(row=3, columnspan=2, sticky="nsew", padx=5)
+        self.agent_task_entry.grid(row=3, columnspan=2, sticky="nsew", padx=20, pady=5)
 
         # Add subsequent agents section
         # self.add_agent_var = ctk.BooleanVar(value=True)
@@ -231,7 +233,7 @@ class MultiAgentOrchestrationUI:
             text="Agent Role:",
             font=self.default_font,
         )
-        role_label.grid(row=4, column=0, sticky="w", padx=5, pady=2)
+        role_label.grid(row=4, column=0, sticky="w", padx=20, pady=5)
 
         self.agent_role_optionmenu = ctk.CTkOptionMenu(
             config_frame,
@@ -239,14 +241,14 @@ class MultiAgentOrchestrationUI:
             values=self.orchestrator.get_agent_roles(),
             font=self.default_font,
         )
-        self.agent_role_optionmenu.grid(row=4, column=1, sticky="e", padx=5, pady=2)
+        self.agent_role_optionmenu.grid(row=4, column=1, sticky="e", padx=20, pady=5)
 
         goal_label = ctk.CTkLabel(
             config_frame,
             text="Agent Goal:",
             font=self.default_font,
         )
-        goal_label.grid(row=5, column=0, sticky="w", padx=5, pady=2)
+        goal_label.grid(row=5, column=0, sticky="w", padx=20, pady=5)
 
         self.agent_goal_entry = ctk.CTkEntry(
             config_frame,
@@ -254,7 +256,7 @@ class MultiAgentOrchestrationUI:
             placeholder_text="e.g., 'identify any factual errors'",
             font=self.default_font,
         )
-        self.agent_goal_entry.grid(row=6, columnspan=2, sticky="we", padx=5, pady=2)
+        self.agent_goal_entry.grid(row=6, columnspan=2, sticky="we", padx=20, pady=5)
 
         # Status label (shows current workflow state)
         self.status_label = ctk.CTkLabel(
@@ -263,6 +265,6 @@ class MultiAgentOrchestrationUI:
             font=self.default_font,
             wraplength=400,
         )
-        self.status_label.grid(row=7, columnspan=2, padx=5, pady=2)
+        self.status_label.grid(row=7, columnspan=2, padx=20, pady=(5,20))
 
 

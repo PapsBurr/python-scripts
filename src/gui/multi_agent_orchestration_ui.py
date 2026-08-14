@@ -15,6 +15,7 @@ class MultiAgentOrchestrationUI:
     def __init__(self, parent_frame):
         self.parent_frame = parent_frame
         self.orchestrator: MultiAgentOrchestrationScript = MultiAgentOrchestrationScript()
+        self.current_agent_panels = []
         
         # UI styling
         self.default_font = ctk.CTkFont(family="Helvetica", size=16)
@@ -49,6 +50,8 @@ class MultiAgentOrchestrationUI:
 
         # # Set default number of agents
         self.num_agents = ClampedIntVar(value=1, min_val=1, max_val=5)
+        self.prev_num_agents = self.num_agents.value
+        self.num_agents.trace_add("write", self._on_num_agents_changed)
         num_agents_label = ctk.CTkLabel(
             self.parent_frame,
             text="Number of Agents: ",
@@ -74,14 +77,29 @@ class MultiAgentOrchestrationUI:
         num_agents_counter_label.pack(padx=5, pady=5)
 
         # Main config frame
-        orchestrator_frame = ctk.CTkScrollableFrame(
+        self.orchestrator_frame = ctk.CTkScrollableFrame(
             master=self.parent_frame,
         )
-        orchestrator_frame.pack(padx=5, pady=5, expand=True, fill="both")
+        self.orchestrator_frame.pack(padx=5, pady=5, expand=True, fill="both")
+
+        # Initial Task Input
+        self.agent_task_label = ctk.CTkLabel(
+            self.orchestrator_frame,
+            text="Initial Task:",
+            font=self.default_font,
+        )
+        self.agent_task_label.pack(padx=20, pady=5)
+
+        self.agent_task_entry = ctk.CTkTextbox(
+            self.orchestrator_frame,
+            font=self.default_font,
+            width=600,
+        )
+        self.agent_task_entry.pack(padx=20, pady=5)
 
         # Create agent frames
         for _ in range(self.num_agents.get()):
-            self._create_agent_panel(orchestrator_frame)
+            self._create_agent_panel(self.orchestrator_frame)
 
         # Control buttons frame
         button_frame = ctk.CTkFrame(self.parent_frame)
@@ -170,9 +188,12 @@ class MultiAgentOrchestrationUI:
     def _create_agent_panel(self, frame):
         # Agent configuration frame
         outer_frame = ctk.CTkFrame(frame)
-        outer_frame.pack()
+        outer_frame.pack(padx=5, pady=(10, 40))
         config_frame = ctk.CTkFrame(outer_frame)
-        config_frame.pack(padx=5, pady=(10, 40))
+        config_frame.pack()
+
+        # Add frame to tracked agent panels
+        self.current_agent_panels.append(outer_frame)
 
         # Model selection
         self.model_selection_var = ctk.StringVar(value=self.available_models[0])
@@ -222,19 +243,7 @@ class MultiAgentOrchestrationUI:
         # agent_task_frame = ctk.CTkFrame(config_frame)
         # agent_task_frame.grid(row=2, columnspan=2, sticky="we", padx=5, pady=2)
 
-        self.agent_task_label = ctk.CTkLabel(
-            config_frame,
-            text="Initial Task:",
-            font=self.default_font,
-        )
-        self.agent_task_label.grid(row=2, sticky="w", padx=20, pady=5)
-
-        self.agent_task_entry = ctk.CTkTextbox(
-            config_frame,
-            font=self.default_font,
-            width=600,
-        )
-        self.agent_task_entry.grid(row=3, columnspan=2, sticky="nsew", padx=20, pady=5)
+        
 
         # Add subsequent agents section
         # self.add_agent_var = ctk.BooleanVar(value=True)
@@ -296,3 +305,15 @@ class MultiAgentOrchestrationUI:
         )
         self.status_label.grid(row=7, columnspan=2, padx=20, pady=(5,20))
 
+    def _on_num_agents_changed(self, *args):
+        delta = self.num_agents.get() - self.prev_num_agents
+
+        if delta > 0:
+            self._create_agent_panel(self.orchestrator_frame)
+            logging.info("New agent panel created")
+        elif delta < 0:
+            logging.info("Removing agent panel")
+            removed_panel = self.current_agent_panels.pop()
+            removed_panel.grid_forget()
+
+        self.prev_num_agents = self.num_agents.get()
